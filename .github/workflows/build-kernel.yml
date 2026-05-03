@@ -139,7 +139,7 @@ jobs:
           cd checkouts/pkgs
           make \
             REGISTRY=${{ env.REGISTRY }} \
-            USERNAME=${{ env.REGISTRY_USERNAME }} \
+            USERNAME=${REGISTRY_USERNAME,,} \
             PUSH=true \
             PLATFORM=linux/arm64 \
             kernel
