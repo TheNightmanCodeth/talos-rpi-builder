@@ -20,7 +20,7 @@ on:
       overlay_tag:
         description: 'Tag for the overlay image (e.g. pr88-rpi-cd1, pr88-rpi-cd2)'
         required: false
-        default: 'pr88-rpi-cd2'
+        default: 'pr88-rpi-cd4'
       uboot_version:
         description: 'u-boot/u-boot source version (for u-boot-<ver>.tar.bz2)'
         required: false
@@ -34,17 +34,17 @@ on:
         required: false
         default: 'b1f988a497c77da60faf89ed33034e9ae58c4cd7f208e5ce451f1372e13540a66289bee4f08ca2f68f105d73f1ceae058b1f713db549edbcc885d9c66bdc4f8b'
       rpi_dtb_ref:
-        description: 'raspberrypi/linux SHA matching the RPi vendor kernel (rpi-6.18.y)'
+        description: 'raspberrypi/linux stable_* tag for DTB packaging'
         required: false
-        default: 'f2f68e79f16f'
+        default: 'stable_20250428'
       rpi_dtb_sha256:
         description: 'sha256 for raspberrypi/linux tarball at rpi_dtb_ref'
         required: false
-        default: '7744912c619220a3c8ecf8e681fe351985ba90e96bf48dcc14a38f89c6d9dd07'
+        default: 'c95906cfbc7808de5860c6d86537bea22e3501f600a5209de59a86cb436886f6'
       rpi_dtb_sha512:
         description: 'sha512 for raspberrypi/linux tarball at rpi_dtb_ref'
         required: false
-        default: '5f08a66c0df28a05ff03560665574a02f48464778d2a8da6fbd6b22c782d49616e7a0623b84e292055b864dd8af45614f6e9b3cd157700fee3ca4346f293a03d'
+        default: '0ed5d490c491e590b5980dccf6fcac0dd3c47accbfacd40d91507c12801cff34fa6a1c68991c8a6c57bb259c909121414766f35a0b11c4bd5d62c3e11d710839'
       runner:
         description: 'GitHub Actions runner (e.g. ubuntu-24.04-arm, mac-runner)'
         required: false
@@ -114,9 +114,9 @@ jobs:
           set -euo pipefail
           cd sbc-raspberrypi
           mkdir -p artifacts/dtb/raspberrypi/patches
-          # 0008 (mdio{} wrapper) removed for RPi vendor kernel:
-          # vendor RP1 driver expects flat ethernet-phy@1 structure, not mdio{} wrapper.
-          # sbc-raspberrypi ships its own 0008 but it fails context at f2f68e79f16f — delete it.
+          # Delete sbc-raspberrypi's 0008: it would add mdio{} wrapper which breaks the
+          # RPi vendor RP1 driver (expects flat phy@1 structure). stable_20250428 source
+          # already has flat phy@1 — no patch needed.
           rm -f artifacts/dtb/raspberrypi/patches/0008-*.patch
           cp -v "${GITHUB_WORKSPACE}/builder/patches/dtb/0011-cm5-sdio1-drop-broken-cd.patch" \
             artifacts/dtb/raspberrypi/patches/0011-cm5-sdio1-drop-broken-cd.patch
