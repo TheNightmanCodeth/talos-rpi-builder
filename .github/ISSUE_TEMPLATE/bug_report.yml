@@ -45,7 +45,7 @@ body:
     id: talos_version
     attributes:
       label: Talos version
-      placeholder: e.g. v1.12.7
+      placeholder: e.g. v1.13.3
     validations:
       required: true
 
@@ -53,7 +53,7 @@ body:
     id: installer_tag
     attributes:
       label: Installer image tag used
-      placeholder: e.g. ghcr.io/wheetazlab/talos-rpi-installer:v1.12.7-talos-rpi
+      placeholder: e.g. ghcr.io/wheetazlab/talos-rpi-installer:v1.13.3-talos-rpi
 
   - type: input
     id: eeprom

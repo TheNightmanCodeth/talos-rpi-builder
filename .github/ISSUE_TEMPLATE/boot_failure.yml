@@ -45,7 +45,7 @@ body:
     id: installer_tag
     attributes:
       label: Installer image / disk image used
-      placeholder: e.g. ghcr.io/wheetazlab/talos-rpi-installer:v1.12.7-talos-rpi
+      placeholder: e.g. ghcr.io/wheetazlab/talos-rpi-installer:v1.13.3-talos-rpi
     validations:
       required: true
 

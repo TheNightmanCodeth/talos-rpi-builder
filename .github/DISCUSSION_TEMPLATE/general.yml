@@ -15,7 +15,7 @@ body:
 
         ---
 
-        ### Tested hardware (as of v1.12.7)
+        ### Tested hardware (as of v1.13.3)
 
         | Hardware | Boot | Status |
         |---|---|---|

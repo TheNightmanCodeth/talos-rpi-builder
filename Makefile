@@ -4,7 +4,11 @@
 # ------------------------------------------------------------------------------
 
 # --- Versions ------------------------------------------------------------------
-TALOS_VERSION        ?= v1.12.7
+TALOS_VERSION        ?= v1.13.3
+# LINUX_KERNEL_VERSION: informational — Linux version shipped by the mainline
+#   siderolabs/pkgs kernel that Talos $(TALOS_VERSION) pins. Surfaced in the
+#   publish.yml release notes. Talos v1.13.3 → Linux 6.18.33.
+LINUX_KERNEL_VERSION ?= 6.18.33
 ISCSI_TOOLS_VERSION  ?= v0.2.0
 UTIL_LINUX_VERSION   ?= 2.41.4
 # CUSTOM_INSTALLER_BASE: defined in .github/workflows/publish.yml as workflow_dispatch input.

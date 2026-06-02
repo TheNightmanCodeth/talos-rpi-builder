@@ -9,14 +9,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-TALOS_VERSION="${TALOS_VERSION:-v1.12.7}"
+TALOS_VERSION="${TALOS_VERSION:-v1.13.3}"
 DOCKER="${DOCKER:-podman}"
 GHCR_ORG="${GHCR_ORG:-wheetazlab}"
 GH_REPO="${GH_REPO:-${GHCR_ORG}/talos-rpi-builder}"
 PATCH_SUFFIX="${PATCH_SUFFIX:-k-macb}"
 PATCHED_RELEASE_TAG="${PATCHED_RELEASE_TAG:-${TALOS_VERSION}-${PATCH_SUFFIX}}"
 ARCH="${ARCH:-arm64}"
-CUSTOM_INSTALLER_BASE="${CUSTOM_INSTALLER_BASE:-ghcr.io/wheetazlab/rpi-talos:v1.12.7-k-macb}"
+CUSTOM_INSTALLER_BASE="${CUSTOM_INSTALLER_BASE:-ghcr.io/wheetazlab/rpi-talos:v1.13.3-k-macb}"
 CUSTOM_OVERLAY_IMAGE="${CUSTOM_OVERLAY_IMAGE:-ghcr.io/wheetazlab/sbc-raspberrypi:pr88}"
 
 while [[ $# -gt 0 ]]; do

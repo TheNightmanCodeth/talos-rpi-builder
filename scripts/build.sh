@@ -14,7 +14,7 @@
 set -euo pipefail
 
 # --- Defaults ------------------------------------------------------------------
-TALOS_VERSION="${TALOS_VERSION:-v1.12.7}"
+TALOS_VERSION="${TALOS_VERSION:-v1.13.3}"
 ISCSI_TOOLS_VERSION="${ISCSI_TOOLS_VERSION:-v0.2.0}"
 UTIL_LINUX_VERSION="${UTIL_LINUX_VERSION:-2.41.2}"
 ARCH="${ARCH:-arm64}"
@@ -22,7 +22,7 @@ DOCKER="${DOCKER:-podman}"
 OVERLAY="rpi_generic"
 OUT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)/_out"
 DISK=""
-CUSTOM_INSTALLER_BASE="${CUSTOM_INSTALLER_BASE:-ghcr.io/wheetazlab/rpi-talos:v1.12.7-k-macb}"
+CUSTOM_INSTALLER_BASE="${CUSTOM_INSTALLER_BASE:-ghcr.io/wheetazlab/rpi-talos:v1.13.3-k-macb}"
 CUSTOM_OVERLAY_IMAGE="${CUSTOM_OVERLAY_IMAGE:-ghcr.io/wheetazlab/sbc-raspberrypi:pr88-cd1}"
 # Extra extension images appended on top of defaults (--extension adds to this)
 EXTRA_EXTENSION_IMAGES=()
@@ -49,7 +49,7 @@ while [[ $# -gt 0 ]]; do
       echo "       [--kernel-arg KEY=VAL]  (repeatable; e.g. --kernel-arg cma=256M)"
       echo ""
       echo "Installer base override:"
-      echo "  --custom-installer  ghcr.io/wheetazlab/rpi-talos:v1.12.7-k-macb"
+      echo "  --custom-installer  ghcr.io/wheetazlab/rpi-talos:v1.13.3-k-macb"
       exit 0
       ;;
     *) echo "Unknown option: $1"; exit 1 ;;

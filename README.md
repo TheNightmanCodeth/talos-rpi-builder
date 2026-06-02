@@ -80,12 +80,12 @@ Flash Raspberry Pi OS to an SD card, boot from it once (this automatically updat
 
 | Component             | Version / Image |
 |-----------------------|----------------|
-| Talos Linux           | `v1.12.7`      |
-| Linux kernel          | standard `siderolabs/pkgs` mainline kernel + 3 macb patches |
+| Talos Linux           | `v1.13.3`      |
+| Linux kernel          | Linux `6.18.33` — standard `siderolabs/pkgs` mainline kernel + 3 macb patches |
 | SBC overlay           | `ghcr.io/wheetazlab/sbc-raspberrypi:pr88-cd1` (PR #88 + CM5 sdio1 broken-cd drop) |
 | iscsi-tools extension | `v0.2.0`       |
 | util-linux-tools      | `2.41.2`       |
-| Installer base        | `ghcr.io/wheetazlab/rpi-talos:v1.12.7-k-macb` (built by `build-kernel.yml`) |
+| Installer base        | `ghcr.io/wheetazlab/rpi-talos:v1.13.3-k-macb` (built by `build-kernel.yml`) |
 
 All versions are configurable — see [Customization](#customization).
 
@@ -113,7 +113,7 @@ Builds the custom installer-base OCI image that `publish.yml` consumes. Run this
 3. Builds and pushes `ghcr.io/<owner>/kernel:<pkgs-tag>` using pkgs' native patch-and-build
 4. Clones `siderolabs/talos` at `talos_version` (unmodified — no patches needed)
 5. Builds and pushes `installer-base` with `PKG_KERNEL=` pointing to the macb-patched kernel OCI
-6. `crane copy`s to `ghcr.io/<owner>/rpi-talos:<installer_tag>` (e.g. `v1.12.7-k-macb`)
+6. `crane copy`s to `ghcr.io/<owner>/rpi-talos:<installer_tag>` (e.g. `v1.13.3-k-macb`)
 
 **Trigger:** Actions → Build Patched Kernel Installer Base → Run workflow
 
@@ -121,12 +121,12 @@ Builds the custom installer-base OCI image that `publish.yml` consumes. Run this
 
 | Input | Default | Description |
 |-------|---------|-------------|
-| `talos_version` | `v1.12.7` | Talos branch to build |
-| `pkg_version` | `v1.12.0-58-g86d6af1` | `siderolabs/pkgs` ref (branch, tag, or git-describe) |
+| `talos_version` | `v1.13.3` | Talos branch to build |
+| `pkg_version` | `v1.13.0-23-g8c18616` | `siderolabs/pkgs` ref (branch, tag, or git-describe) |
 | `pkgs_macb_ref` | `9a718f6a64aaeb260a9e5182c93817676beff270` | `siderolabs/pkgs` commit SHA on `main` containing the three macb patches |
-| `installer_tag` | `v1.12.7-k-macb` | Output image tag |
+| `installer_tag` | `v1.13.3-k-macb` | Output image tag |
 
-Also triggers on push of a `v*-kernel` tag (e.g. `v1.12.7-kernel`).
+Also triggers on push of a `v*-kernel` tag (e.g. `v1.13.3-kernel`).
 
 **After running:** no manual step needed — `CUSTOM_INSTALLER_BASE` in the Makefile already points to the output tag. The summary tab shows the exact image ref to confirm.
 
@@ -169,7 +169,7 @@ After running, update `CUSTOM_OVERLAY_IMAGE` in the Makefile to the new tag.
 Assembles the disk image and upgrade installer using the pre-built kernel and overlay from Steps 1 and 2. **Do not run this until both prior steps have completed successfully and `CUSTOM_INSTALLER_BASE` / `CUSTOM_OVERLAY_IMAGE` in the Makefile point to the correct tags.**
 
 **Triggers:**
-- Push a version tag (e.g. `git tag v1.12.7 && git push --tags`) → full build + publish
+- Push a version tag (e.g. `git tag v1.13.3 && git push --tags`) → full build + publish
 - Manual run via **Actions → Build and Publish → Run workflow**
 
 **Workflow dispatch inputs:**
@@ -256,11 +256,11 @@ Override defaults with env vars or flags:
 
 ```bash
 # build-kernel.sh options
-GHCR_ORG=myorg TALOS_VERSION=v1.12.7 PKG_VERSION=v1.12.0-58-g86d6af1 INSTALLER_TAG=v1.12.7-k-macb \
+GHCR_ORG=myorg TALOS_VERSION=v1.13.3 PKG_VERSION=v1.13.0-23-g8c18616 INSTALLER_TAG=v1.13.3-k-macb \
   ./scripts/build-kernel.sh
 
 # override patch source ref if needed
-GHCR_ORG=myorg TALOS_VERSION=v1.12.7 PKG_VERSION=v1.12.0-58-g86d6af1 PKGS_MACB_REF=9a718f6a64aaeb260a9e5182c93817676beff270 INSTALLER_TAG=v1.12.7-k-macb \
+GHCR_ORG=myorg TALOS_VERSION=v1.13.3 PKG_VERSION=v1.13.0-23-g8c18616 PKGS_MACB_REF=9a718f6a64aaeb260a9e5182c93817676beff270 INSTALLER_TAG=v1.13.3-k-macb \
   ./scripts/build-kernel.sh
 
 # build-overlay.sh options
@@ -303,7 +303,7 @@ make release      # GitHub release with .raw.xz artifact
 
 ```bash
 # Different Talos version
-make build TALOS_VERSION=v1.12.7
+make build TALOS_VERSION=v1.13.3
 
 # Override overlay image
 make build CUSTOM_OVERLAY_IMAGE=ghcr.io/wheetazlab/sbc-raspberrypi:pr88-cd1
@@ -364,7 +364,7 @@ make help           Show all targets and version variables
 
 ### What's in the image?
 
-- Talos Linux kernel + initramfs (arm64) — from `ghcr.io/wheetazlab/rpi-talos:v1.12.7-k-macb` (standard `siderolabs/pkgs` mainline kernel, built by `build-kernel.yml` with 3 macb patches applied)
+- Talos Linux kernel + initramfs (arm64) — from `ghcr.io/wheetazlab/rpi-talos:v1.13.3-k-macb` (standard `siderolabs/pkgs` mainline kernel, built by `build-kernel.yml` with 3 macb patches applied)
 - **Patched U-Boot** (BCM2712/RP1) from `ghcr.io/wheetazlab/sbc-raspberrypi:pr88` (PR #88 patch set — NVMe/PCIe, EEE LPI, MACB driver)
 - DTBs from custom `sbc-raspberrypi` overlay (`rpi_generic` installer):
   - `bcm2711-rpi-4-b.dtb` ← Pi 4 Model B
@@ -404,7 +404,7 @@ talosctl kubeconfig --nodes <CONTROLPLANE_IP> --talosconfig talosconfig
 To upgrade an existing node:
 
 ```bash
-talosctl upgrade --nodes <NODE_IP> --image ghcr.io/wheetazlab/talos-rpi-installer:v1.12.7-k-macb
+talosctl upgrade --nodes <NODE_IP> --image ghcr.io/wheetazlab/talos-rpi-installer:v1.13.3-k-macb
 ```
 
 ---
@@ -412,12 +412,12 @@ talosctl upgrade --nodes <NODE_IP> --image ghcr.io/wheetazlab/talos-rpi-installe
 ## References
 
 **Talos / SBC**
-- [Talos Linux docs — SBC support](https://www.talos.dev/v1.12/talos-guides/install/single-board-computers/)
+- [Talos Linux docs — SBC support](https://www.talos.dev/v1.13/talos-guides/install/single-board-computers/)
 - [sbc-raspberrypi releases](https://github.com/siderolabs/sbc-raspberrypi/releases)
 - [BCM2712/RP1 U-Boot + NVMe (sbc-raspberrypi PR #88)](https://github.com/siderolabs/sbc-raspberrypi/pull/88) by [@appkins](https://github.com/appkins)
 - [CM5 boot issue fix (sbc-raspberrypi#79)](https://github.com/siderolabs/sbc-raspberrypi/pull/79)
 - [Original boot issue (talos#12748)](https://github.com/siderolabs/talos/issues/12748)
-- [Talos system extensions](https://www.talos.dev/v1.12/talos-guides/configuration/system-extensions/)
+- [Talos system extensions](https://www.talos.dev/v1.13/talos-guides/configuration/system-extensions/)
 - [DeskPi Super6C](https://deskpi.com/products/deskpi-super6c-raspberry-pi-cm4-6-boards-cluster-mini-itx-board) — example CM4IO-compatible carrier board
 
 **Issue 91 / vendor-kernel / macb patches**
