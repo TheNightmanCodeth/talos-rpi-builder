@@ -8,7 +8,7 @@ Custom [Talos Linux](https://www.talos.dev/) image builder for **Raspberry Pi CM
 
 Builds a single `rpi_generic` image that works across CM4, CM5, Pi 4, and Pi 5 boards.
 
-The build pipeline is fully self-contained — the kernel (`ghcr.io/wheetazlab/rpi-talos`) is built from source via `build-kernel.yml`, using the standard `siderolabs/pkgs` kernel with three macb ethernet patches imported directly from `siderolabs/pkgs` main at commit [`9a718f6`](https://github.com/siderolabs/pkgs/commit/9a718f6a64aaeb260a9e5182c93817676beff270) (PR #1526 merge). The disk image is assembled by `publish.yml` using that kernel image plus a custom `sbc-raspberrypi` overlay (full BCM2712/RP1 U-Boot with NVMe/PCIe support, unified `rpi_generic` installer), `iscsi-tools`, and `util-linux-tools`.
+The build pipeline is fully self-contained — the kernel (`ghcr.io/wheetazlab/rpi-talos`) is built from source via `build-kernel.yml`, using the standard `siderolabs/pkgs` kernel. As of Talos **v1.13** (`pkgs` v1.13.0+), the macb TX-stall fixes (originally [`siderolabs/pkgs` PR #1526](https://github.com/siderolabs/pkgs/pull/1526)) are **upstreamed into the `pkgs` kernel patch set**, so the stock `pkgs` kernel already carries them — no separate patch import is required (the earlier import step injected the older PR #1526 revision and is removed on this branch). The disk image is assembled by `publish.yml` using that kernel image plus a custom `sbc-raspberrypi` overlay (full BCM2712/RP1 U-Boot with NVMe/PCIe support, unified `rpi_generic` installer), `iscsi-tools`, and `util-linux-tools`.
 
 ## Background
 
@@ -109,7 +109,7 @@ Builds the custom installer-base OCI image that `publish.yml` consumes. Run this
 
 **Pipeline:**
 1. Clones `siderolabs/pkgs` at `PKG_VERSION` (standard upstream kernel, no vendor fork)
-2. Fetches the three macb patches from `siderolabs/pkgs` main at commit `9a718f6` (PR #1526 merge) into the pkgs kernel patch directory
+2. Verifies the macb patches are present in the pkgs kernel patch directory — as of v1.13 they are upstreamed into `pkgs` itself (no import needed; the old PR #1526 import step is removed)
 3. Builds and pushes `ghcr.io/<owner>/kernel:<pkgs-tag>` using pkgs' native patch-and-build
 4. Clones `siderolabs/talos` at `talos_version` (unmodified — no patches needed)
 5. Builds and pushes `installer-base` with `PKG_KERNEL=` pointing to the macb-patched kernel OCI
